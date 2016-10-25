@@ -11,10 +11,10 @@ module.exports = yeoman.Base.extend({
     ));
 
     var prompts = [{
-      type: 'confirm',
-      name: 'someAnswer',
-      message: 'Would you like to enable this option?',
-      default: true
+      type: 'input',
+      name: 'projectName',
+      message: 'What would you like this project to be named?',
+      default: 'reach'
     }];
 
     return this.prompt(prompts).then(function (props) {

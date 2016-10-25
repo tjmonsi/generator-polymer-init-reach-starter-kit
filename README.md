@@ -11,8 +11,8 @@ Steps I did to build this (based on [how to build a CLI generator](https://www.y
 
         mkdir generator-polymer-init-reach-starter-kit
         
-3. Run Yo and pick Generator
+3. Run Yo and pick Generator then set the necessary options in there
 
         yo
 
-4. 
+4. Set the necessary prompts for getting variables at generators/app/index.js
