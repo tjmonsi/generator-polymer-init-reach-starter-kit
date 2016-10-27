@@ -5,23 +5,23 @@
 
 <!-- Custom Element dependencies -->
 
-<link rel="import" href="./<%= projectNameSlugged >-header/<%= projectNameSlugged >-header.html">
-<link rel="import" href="./<%= projectNameSlugged >-drawer/<%= projectNameSlugged >-drawer.html">
+<link rel="import" href="./<%= projectNameSlugged %>-header/<%= projectNameSlugged %>-header.html">
+<link rel="import" href="./<%= projectNameSlugged %>-drawer/<%= projectNameSlugged %>-drawer.html">
 
 <!--
-`<<%= projectNameSlugged >-app>` is the main core element called in the index.html that
+`<<%= projectNameSlugged %>-app>` is the main core element called in the index.html that
 renders the pages.
 
 Currently we have hard-coded the pages, they are lazily loaded inside the dom-module
 
-In typical use, just slap some `<<%= projectNameSlugged >-app>` at the top of your body:
+In typical use, just slap some `<<%= projectNameSlugged %>-app>` at the top of your body:
 
     <body>
-      <<%= projectNameSlugged >-app></<%= projectNameSlugged >-app>
+      <<%= projectNameSlugged %>-app></<%= projectNameSlugged %>-app>
 
 Wham! It's all awesome now!
 -->
-<dom-module id="<%= projectNameSlugged >-app">
+<dom-module id="<%= projectNameSlugged %>-app">
   <!-- Lazy loaded dependencies -->
   <!-- this should be put here so that it can be found by the importer below -->
   <link rel="lazy-import" href="/src/pages/web-home/web-home.html" group="web-home">
@@ -39,7 +39,7 @@ Wham! It's all awesome now!
 
       <reach-core-route
           main-content
-          from-element-name="<%= projectNameSlugged >-app"
+          from-element-name="<%= projectNameSlugged %>-app"
           subroute="{{subroute}}"
           not-found-tag="[[notFoundTag]]"
           not-authorized-tag="[[notAuthorizedTag]]"
@@ -56,7 +56,7 @@ Wham! It's all awesome now!
     /*global Polymer*/
 
     Polymer({
-      is: '<%= projectNameSlugged >-app',
+      is: '<%= projectNameSlugged %>-app',
 
       properties: {
         notFoundTag: {
@@ -73,7 +73,7 @@ Wham! It's all awesome now!
       },
 
       ready: function() {
-        this.fire('<%= projectNameSlugged >-app-ready');
+        this.fire('<%= projectNameSlugged %>-app-ready');
 
       }
     });

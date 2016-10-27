@@ -25,7 +25,7 @@ module.exports = yeoman.Base.extend({
 
     return this.prompt(prompts).then(function (props) {
       // To access props later use this.props.someAnswer;
-      props.projectNameSlugged = slug(props.trim().toLowerCase());
+      props.projectNameSlugged = slug(props.projectName.trim().toLowerCase());
       this.props = props;
     }.bind(this));
   },
@@ -36,58 +36,58 @@ module.exports = yeoman.Base.extend({
     //var projectDescription = this.props.projectDescription;
     
     this.fs.copyTpl(
-      this.templatePath() + '/**/!(_)*',
+      this.templatePath(),
       this.destinationPath(),
       this.props
     );
     
-    this.fs.copyTpl(
-      this.templatePath('src/_variables.scss'),
-      this.destinationPath('src/_variables.scss'),
-      this.props
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath('src/_variables.scss'),
+    //   this.destinationPath('src/_variables.scss'),
+    //   this.props
+    // );
     
-    this.fs.copyTpl(
-      this.templatePath('src/_project-name.html'),
-      this.destinationPath('src/' + projectNameSlugged + '-app.html'),
-      this.props
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath('src/_project-name.html'),
+    //   this.destinationPath('src/' + projectNameSlugged + '-app.html'),
+    //   this.props
+    // );
     
-    this.fs.copyTpl(
-      this.templatePath('src/_project-header/_project-header.html'),
-      this.destinationPath('src/' + projectNameSlugged + '-header/' + projectNameSlugged + '-header.html'),
-      this.props
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath('src/_project-header/_project-header.html'),
+    //   this.destinationPath('src/' + projectNameSlugged + '-header/' + projectNameSlugged + '-header.html'),
+    //   this.props
+    // );
     
-    this.fs.copyTpl(
-      this.templatePath('src/_project-header/_project-header-style.html'),
-      this.destinationPath('src/' + projectNameSlugged + '-header/' + projectNameSlugged + '-header-style.html'),
-      this.props
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath('src/_project-header/_project-header-style.html'),
+    //   this.destinationPath('src/' + projectNameSlugged + '-header/' + projectNameSlugged + '-header-style.html'),
+    //   this.props
+    // );
     
-    this.fs.copyTpl(
-      this.templatePath('src/_project-header/_project-header-style.scss'),
-      this.destinationPath('src/' + projectNameSlugged + '-header/' + projectNameSlugged + '-header-style.scss'),
-      this.props
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath('src/_project-header/_project-header-style.scss'),
+    //   this.destinationPath('src/' + projectNameSlugged + '-header/' + projectNameSlugged + '-header-style.scss'),
+    //   this.props
+    // );
     
-    this.fs.copyTpl(
-      this.templatePath('src/_project-drawer/_project-drawer.html'),
-      this.destinationPath('src/' + projectNameSlugged + '-drawer/' + projectNameSlugged + '-drawer.html'),
-      this.props
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath('src/_project-drawer/_project-drawer.html'),
+    //   this.destinationPath('src/' + projectNameSlugged + '-drawer/' + projectNameSlugged + '-drawer.html'),
+    //   this.props
+    // );
     
-    this.fs.copyTpl(
-      this.templatePath('src/_project-drawer/_project-drawer-style.html'),
-      this.destinationPath('src/' + projectNameSlugged + '-drawer/' + projectNameSlugged + '-drawer-style.html'),
-      this.props
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath('src/_project-drawer/_project-drawer-style.html'),
+    //   this.destinationPath('src/' + projectNameSlugged + '-drawer/' + projectNameSlugged + '-drawer-style.html'),
+    //   this.props
+    // );
     
-    this.fs.copyTpl(
-      this.templatePath('src/_project-drawer/_project-drawer-style.scss'),
-      this.destinationPath('src/' + projectNameSlugged + '-drawer/' + projectNameSlugged + '-drawer-style.scss'),
-      this.props
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath('src/_project-drawer/_project-drawer-style.scss'),
+    //   this.destinationPath('src/' + projectNameSlugged + '-drawer/' + projectNameSlugged + '-drawer-style.scss'),
+    //   this.props
+    // );
     
     
     // this.fs.copy(

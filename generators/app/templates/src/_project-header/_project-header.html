@@ -8,11 +8,11 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 
 <!-- Style dependency -->
-<link rel="import" href="<%= projectNameSlugged >-header-style.html">
+<link rel="import" href="<%= projectNameSlugged %>-header-style.html">
 
-<dom-module id="<%= projectNameSlugged >-header">
+<dom-module id="<%= projectNameSlugged %>-header">
   <template>
-    <style is="custom-style" include="<%= projectNameSlugged >-header-style">
+    <style is="custom-style" include="<%= projectNameSlugged %>-header-style">
       :host {
         display: block;
       }
@@ -32,10 +32,10 @@
 
   <script>
     Polymer({
-      is: '<%= projectNameSlugged >-header',
+      is: '<%= projectNameSlugged %>-header',
 
       _toggleDrawer: function() {
-        this.fire('<%= projectNameSlugged >-drawer');
+        this.fire('<%= projectNameSlugged %>-drawer');
       }
     });
   </script>
