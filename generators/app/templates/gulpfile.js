@@ -110,6 +110,10 @@ gulp.task('injectSass', injectSass);
 /**
  * PRODUCTION BUILD STRATEGY
  */ 
+ 
+//   Got problems? Try logging 'em
+// const logging = require('plylog');
+// logging.setVerbose();
 
 global.config = {
   polymerJsonPath: path.join(process.cwd(), 'polymer.json'),
@@ -139,6 +143,10 @@ global.config = {
 var clean = require('./gulp-tasks/clean.js');
 var images = require('./gulp-tasks/images.js');
 var project = require('./gulp-tasks/project.js');
+var uglify = require('gulp-uglify');
+var babel = require('gulp-babel');
+var cssSlam = require('css-slam').gulp;
+var htmlMinifier = require('gulp-html-minifier');
 
 // The source task will split all of your source files into one
 // big ReadableStream. Source files are those in src/** as well as anything
@@ -151,6 +159,10 @@ function source() {
   return project.splitSource()
     // Add your own build tasks here!
     .pipe(gulpif('**/*.{png,gif,jpg,svg}', images.minify()))
+    .pipe(gulpif(/\.js$/, babel({presets: ['es2015'], compact: true, minified: true})))
+    .pipe(gulpif(/\.js$/, uglify({compress: true})))
+    .pipe(gulpif(/\.css$/, cssSlam()))
+    .pipe(gulpif(/\.html$/, htmlMinifier({collapseWhitespace: true, minifyCSS: true, minifyJS: true, removeComments: true})))
     .pipe(project.rejoin()); // Call rejoin when you're finished
 }
 
@@ -160,6 +172,10 @@ function source() {
 // case you need it :)
 function dependencies() {
   return project.splitDependencies()
+    .pipe(gulpif(/\.js$/, babel({presets: ['es2015'], compact: true, minified: true})))
+    .pipe(gulpif(/\.js$/, uglify({compress: true})))
+    .pipe(gulpif(/\.css$/, cssSlam()))
+    .pipe(gulpif(/\.html$/, htmlMinifier({collapseWhitespace: true, minifyCSS: true, minifyJS: true, removeComments: true})))
     .pipe(project.rejoin());
 }
 

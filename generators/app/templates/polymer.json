@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/project-app.html",
+  "shell": "src/<%= projectNameSlugged %>-app.html",
   "fragments": [
     "src/pages/web-home/web-home.html",
     "src/pages/web-404/web-404.html",
