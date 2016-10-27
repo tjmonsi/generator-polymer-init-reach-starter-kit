@@ -1,0 +1,26 @@
+<!-- Polymer dependencies -->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<!-- Style dependency -->
+<link rel="import" href="web-404-style.html">
+
+<dom-module id="web-404">
+  <template>
+    <style is="custom-style" include="web-404-style">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div class="not-found">
+      Page not found
+    </div>
+
+  </template>
+  <script>
+    /*global Polymer*/
+    Polymer({
+      is: 'web-404'
+    });
+  </script>
+</dom-module>
