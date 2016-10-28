@@ -129,6 +129,28 @@ module.exports = yeoman.Base.extend({
       this.destinationPath('images/manifest/icon-512x512.png') 
     );
     
+    this.write('.gitattributes', '* text=auto');
+    this.write('.gitignore', 'bower_components/\nbuild/\nnode_modules/');
+    this.write('.travis.yml', 'language: node_js\n' +
+                              'sudo: required\n' +
+                              'dist: trusty\n' +
+                              'addons:' +
+                              '  firefox: \'46.0\'\n' +
+                              '    apt:\n' +
+                              '      sources:\n' +
+                              '        - google-chrome\n' +
+                              '      packages:\n' +
+                              '        - google-chrome-stable\n' +
+                              'node_js:\n' +
+                              '  - \'6\'\n' +
+                              '  - \'5\'\n' +
+                              '  - \'4\'\n' +
+                              'before_script:\n' +
+                              '  - npm install -g bower polymer-cli\n' +
+                              '  - bower install\n'+
+                              'script:\n' +
+                              '  - xvfb-run polymer test');
+    
     // this.fs.copy(
     //   this.templatePath('.gitattributes'),
     //   this.destinationPath('.gitattributes') 
