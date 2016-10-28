@@ -44,7 +44,7 @@ Wham! It's all awesome now!
           not-found-tag="[[notFoundTag]]"
           not-authorized-tag="[[notAuthorizedTag]]"
           navigation-list="{{navigationList}}"
-          default-page="home">
+          default-page="[[defaultRoot]]">
 
         <web-home name="home" label="Home"></web-home>
 
@@ -61,11 +61,21 @@ Wham! It's all awesome now!
       properties: {
         notFoundTag: {
           type: String,
+          /* NOT FOUND TAG STARTS */
           value: 'web-404'
+          /* NOT FOUND TAG ENDS */
         },
         notAuthorizedTag: {
           type: String,
+          /* NOT AUTHORIZED TAG STARTS */
           value: 'web-403'
+          /* NOT AUTHORIZED TAG ENDS */
+        },
+        defaultRoot: {
+          type: String,
+          /* DEFAULT ROOT STARTS */
+          value: 'home'
+          /* DEFAULT ROOT ENDS */
         },
         navigationList: {
           type: Array
