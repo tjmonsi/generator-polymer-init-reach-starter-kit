@@ -18,6 +18,8 @@ and generator-polymer-init-custom-build using
 
     npm install -g polymer-cli
     npm install -g generator-polymer-init-reach-starter-kit
+    npm install -g bower
+    npm install -g yo
 
 ##### Initialize project from template
 
@@ -26,6 +28,26 @@ Generate your new project using `polymer init`:
     mkdir my-app
     cd my-app
     polymer init reach-starter-kit
+    
+##### Add a page
+
+Generate a page of the project using `yo polymer-init-reach-starter-kit:page`:
+
+    # inside my-app
+    polymer-init-reach-starter-kit:page
+    
+##### Add a custom component
+
+Generate a custom component of the project using `yo polymer-init-reach-starter-kit:element`:
+
+    # inside my-app
+    polymer-init-reach-starter-kit:element
+    
+##### Run watchers while development
+    
+Run gulp watchers to inject SASS files or edit the shell app's pages and routing:
+
+    npm run gulp watch-all
 
 ### Start the development server
 
@@ -45,7 +67,7 @@ the same library that powers Polymer CLI. Out of the box it will clean the
 `build` directory, and provide image minification. Follow the comments in the 
 `gulpfile.js` to add additional steps like JS transpilers or CSS preprocessors.
 
-    gulp
+    npm run gulp
 
 ### Preview the build
 

@@ -9,7 +9,7 @@ module.exports = yeoman.Base.extend({
   prompting: function () {
     // Have Yeoman greet the user.
     this.log(yosay(
-      'Welcome to the gnarly ' + chalk.red('generator-polymer-init-reach-starter-kit') + ' generator!'
+      'Welcome to the gnarly page ' + chalk.red('generator-polymer-init-reach-starter-kit') + ' generator!'
     ));
 
     var prompts = [{
@@ -36,13 +36,13 @@ module.exports = yeoman.Base.extend({
       type: 'confirm',
       name: 'notIncludedInRouter',
       message: 'Should this be included in the router?',
-      default: false
+      default: true
     },
     {
       type: 'confirm',
       name: 'notIncludedInLink',
       message: 'Should this be included in the links?',
-      default: false
+      default: true
     }];
 
     return this.prompt(prompts).then(function (props) {
@@ -56,7 +56,7 @@ module.exports = yeoman.Base.extend({
     
     var str = this.read(this.destinationPath('config/pages.json'));
     var tagName = this.props.tagName;
-    var src = '/src/pages/' + tagName + '/' + tagName;
+    var src = 'src/pages/' + tagName + '/' + tagName;
     var obj = JSON.parse(str);
     
     if (_array.findIndex(obj.pages, function(o) { return o.tag == tagName; }) < 0) {
@@ -64,15 +64,15 @@ module.exports = yeoman.Base.extend({
         tag: this.props.tagName,
         "link-label": this.props.label,
         route: this.props.route,
-        source: src + '.html'
+        source: '/' + src + '.html'
       };
       
-      if (this.props.notIncludedInRouter) {
-        el['not-included-in-router'] = this.props.notIncludedInRouter;
+      if (!this.props.notIncludedInRouter) {
+        el['not-included-in-router'] = !this.props.notIncludedInRouter;
       }
       
-      if (this.props.notIncludedInLink) {
-        el['not-included-in-link'] = this.props.notIncludedInLink;
+      if (!this.props.notIncludedInLink) {
+        el['not-included-in-links'] = !this.props.notIncludedInLink;
       }
       
       obj.pages.push(el);
@@ -96,6 +96,37 @@ module.exports = yeoman.Base.extend({
         this.destinationPath(src + '.html'),
         this.props
       );
+      
+      var startLazy = '<!-- LAZY LOADER STARTS HERE -->';
+      var endLazy = '<!-- LAZY LOADER ENDS HERE -->';
+      
+      var startRouter = '<!-- ROUTER STARTS HERE -->';
+      var endRouter = '<!-- ROUTER ENDS HERE -->';
+      
+      //Creates the regEx this ways so I can pass the variables. 
+      var regLazy = new RegExp(startLazy+"[\\s\\S]*"+endLazy, "g");
+      var regRouter = new RegExp(startRouter+"[\\s\\S]*"+endRouter, "g");
+      
+      var shell = this.read(this.destinationPath('src/'+ slug(this.determineAppname().trim()) + '-app.html'));
+      
+      var lazyString = startLazy + '\n' + obj.pages.reduce(function(prev, item) {
+        var str = prev.tag ? `<link rel="lazy-import" href="${prev.source}" group="${prev.tag}">\n` : prev;
+        str += item.tag ? `<link rel="lazy-import" href="${item.source}" group="${item.tag}">\n` : item;
+        return str;
+      }) + endLazy;
+      
+      var routerString = startRouter + '\n' + obj.pages.reduce(function(prev, item) {
+        var str = prev.tag ? `<${prev.tag} name="${prev.route}" label="${prev['link-label']}" scroll-progress="{{scrollProgress}}" user="{{user}}" ${prev['not-included-in-links'] ? 'not-included-in-links' : ''}></${prev.tag}>\n` : prev;
+        if (!item['not-included-in-router']) {
+          str += item.tag ? `<${item.tag} name="${item.route}" label="${item['link-label']}" scroll-progress="{{scrollProgress}}" user="{{user}}" ${item['not-included-in-links'] ? 'not-included-in-links' : ''}></${item.tag}>\n` : item;
+        }
+        return str;
+      }) + endRouter;
+      
+      shell = shell.replace(regLazy, lazyString);
+      shell = shell.replace(regRouter, routerString);
+      
+      this.write(this.destinationPath('src/'+ slug(this.determineAppname().trim()) + '-app.html'), shell);
     } 
     else {
       console.log(tagName + ' already exists. Please pick another or change the pages.json');

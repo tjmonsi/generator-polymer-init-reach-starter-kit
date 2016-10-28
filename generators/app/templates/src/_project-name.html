@@ -23,19 +23,27 @@ Wham! It's all awesome now!
 -->
 <dom-module id="<%= projectNameSlugged %>-app">
   <!-- Lazy loaded dependencies -->
-  <!-- this should be put here so that it can be found by the importer below -->
+  <!-- LAZY LOADER STARTS HERE -->
   <link rel="lazy-import" href="/src/pages/web-home/web-home.html" group="web-home">
   <link rel="lazy-import" href="/src/pages/web-404/web-404.html" group="web-404">
   <link rel="lazy-import" href="/src/pages/web-403/web-403.html" group="web-403">
+  <!-- LAZY LOADER ENDS HERE -->
 
   <template>
     <style is="custom-style">
     </style>
 
-    <reach-core-layout>
+    <reach-core-layout scroll-progress="{{scrollProgress}}">
 
-      <<%= projectNameSlugged %>-header main-header></<%= projectNameSlugged %>-header>
-      <<%= projectNameSlugged %>-drawer main-drawer navigation-list="[[navigationList]]"></<%= projectNameSlugged %>-drawer>
+      <<%= projectNameSlugged %>-header 
+        main-header 
+        scroll-progress="{{scrollProgress}}" 
+        user="{{user}}"></<%= projectNameSlugged %>-header>
+      <<%= projectNameSlugged %>-drawer 
+        main-drawer 
+        navigation-list="[[navigationList]]" 
+        scroll-progress="{{scrollProgress}}" 
+        user="{{user}}"></<%= projectNameSlugged %>-drawer>
 
       <reach-core-route
           main-content
@@ -46,7 +54,13 @@ Wham! It's all awesome now!
           navigation-list="{{navigationList}}"
           default-page="[[defaultRoot]]">
 
-        <web-home name="home" label="Home"></web-home>
+        <!-- ROUTER STARTS HERE -->
+        <web-home 
+          name="home" 
+          label="Home" 
+          scroll-progress="{{scrollProgress}}" 
+          user="{{user}}"></web-home>
+        <!-- ROUTER ENDS HERE -->
 
       </reach-core-route>
     </reach-core-layout>
@@ -79,6 +93,12 @@ Wham! It's all awesome now!
         },
         navigationList: {
           type: Array
+        },
+        scrollProgress: {
+          type: Number
+        },
+        user: {
+          type: Object
         }
       },
 

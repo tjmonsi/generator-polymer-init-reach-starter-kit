@@ -3,6 +3,7 @@ var gulpif = require('gulp-if');
 var watch = require('gulp-watch');
 var path = require('path');
 var injectSass = require('./gulp-tasks/inject-sass.js');
+var injectPage = require('./gulp-tasks/inject-page.js');
 
 global.config = {
   polymerJsonPath: path.join(process.cwd(), 'polymer.json'),
@@ -26,10 +27,11 @@ global.config = {
   }
 };
 /**
- * This is a two part gulpfile. 
+ * This is a three part gulpfile. 
  * 
  * 1. SASS Strategy
- * 2. Production Building Strategy
+ * 2. Page Building Strategy
+ * 3. Production Building Strategy
  */  
 
 /**
@@ -45,8 +47,11 @@ global.config = {
  *
  */
 
-gulp.task('watchSass', function(){
+gulp.task('watch-all', function(){
+  injectSass();
+  injectPage();
   watch(['src/**/*.scss'], injectSass);
+  watch(['config/pages.json'], injectPage);
 });
 
 //This is currently not used. But you can enable by uncommenting
@@ -54,6 +59,8 @@ gulp.task('watchSass', function(){
 // var excludeDirs = [`!${basePath}bower_components/${ext}`,`!${basePath}images/${ext}`];
 
 gulp.task('injectSass', injectSass);
+gulp.task('injectPage', injectPage)
+
 
 /**
  * PRODUCTION BUILD STRATEGY
@@ -112,6 +119,7 @@ function dependencies() {
 // with their own service workers
 gulp.task('default', gulp.series([
   'injectSass',
+  'injectPage',
   clean([global.config.build.rootDirectory]),
   project.merge(source, dependencies),
   project.serviceWorker

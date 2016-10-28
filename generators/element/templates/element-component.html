@@ -1,0 +1,35 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`<%= element %>`
+
+-->
+
+<!-- Style dependency -->
+<link rel="import" href="<%= element %>-style.html">
+
+<dom-module id="<%= element %>">
+  <template>
+    <style is="custom-style" include="<%= element %>-style">
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: '<%= element %>',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: '<%= element %>',
+        },
+      },
+
+    });
+  </script>
+</dom-module>

@@ -8,21 +8,21 @@
       "tag": "web-home",
       "source": "/src/pages/web-home/web-home.html",
       "not-included-in-router": false,
-      "not-included-in-link": false,
+      "not-included-in-links": false,
       "link-label": "Home",
       "route": "home"
     },
     {
       "tag": "web-404",
-      "source": "/src/pages/web-home/web-404.html",
+      "source": "/src/pages/web-404/web-404.html",
       "not-included-in-router": true,
-      "not-included-in-link": true
+      "not-included-in-links": true
     },
     {
       "tag": "web-403",
-      "source": "/src/pages/web-home/web-403.html",
+      "source": "/src/pages/web-403/web-403.html",
       "not-included-in-router": true,
-      "not-included-in-link": true,
+      "not-included-in-links": true
     }
   ]
 }

@@ -90,6 +90,11 @@ module.exports = yeoman.Base.extend({
     );
     
     this.fs.copy(
+      this.templatePath('src/_project-icons/_default-icons.html'),
+      this.destinationPath('src/' + projectNameSlugged + '-icons/default-icons.html') 
+    );
+    
+    this.fs.copy(
       this.templatePath('images/_favicon.ico'),
       this.destinationPath('images/favicon.ico') 
     );
