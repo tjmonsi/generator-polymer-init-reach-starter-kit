@@ -52,14 +52,16 @@ Wham! It's all awesome now!
           not-found-tag="[[notFoundTag]]"
           not-authorized-tag="[[notAuthorizedTag]]"
           navigation-list="{{navigationList}}"
-          default-page="[[defaultRoot]]">
+          default-page="[[defaultRoot]]"
+          query-params="{{queryParams}}">
 
         <!-- ROUTER STARTS HERE -->
         <web-home 
           name="home" 
           label="Home" 
           scroll-progress="{{scrollProgress}}" 
-          user="{{user}}"></web-home>
+          user="{{user}}"
+          query-params="{{queryParams}}"></web-home>
         <!-- ROUTER ENDS HERE -->
 
       </reach-core-route>
@@ -98,6 +100,9 @@ Wham! It's all awesome now!
           type: Number
         },
         user: {
+          type: Object
+        },
+        queryParams: {
           type: Object
         }
       },

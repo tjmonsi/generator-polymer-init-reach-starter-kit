@@ -39,9 +39,9 @@ var injectPage = function () {
           }) + endLazy;
           
           var routerString = startRouter + '\n' + obj.pages.reduce(function(prev, item) {
-            var str = prev.tag ? `<${prev.tag} name="${prev.route}" label="${prev['link-label']}" scroll-progress="{{scrollProgress}}" user="{{user}}" ${prev['not-included-in-links'] ? 'not-included-in-links' : ''}></${prev.tag}>\n` : prev;
+            var str = prev.tag ? `<${prev.tag} name="${prev.route}" label="${prev['link-label']}" scroll-progress="{{scrollProgress}}" user="{{user}}" query-params="{{queryParams}}" ${prev['not-included-in-links'] ? 'not-included-in-links' : ''}></${prev.tag}>\n` : prev;
             if (!item['not-included-in-router']) {
-              str += item.tag ? `<${item.tag} name="${item.route}" label="${item['link-label']}" scroll-progress="{{scrollProgress}}" user="{{user}}" ${item['not-included-in-links'] ? 'not-included-in-links' : ''}></${item.tag}>\n` : item;
+              str += item.tag ? `<${item.tag} name="${item.route}" label="${item['link-label']}" scroll-progress="{{scrollProgress}}" user="{{user}}" query-params="{{queryParams}}" ${item['not-included-in-links'] ? 'not-included-in-links' : ''}></${item.tag}>\n` : item;
             }
             return str;
           }) + endRouter;
