@@ -107,7 +107,9 @@ function source() {
 // case you need it :)
 function dependencies() {
   return project.splitDependencies()
-    .pipe(gulpif(/\.js$/, babel({presets: ['es2015'], compact: true, minified: true})))
+    .pipe(gulpif(function(file) {
+      return file.path.indexOf('firebase') < 0 && file.path.indexOf('web-animations') < 0 && /\.js$/.test(file.path);
+    }, babel({presets: ['es2015'], compact: true, minified: true})))
     .pipe(gulpif(/\.js$/, uglify({compress: true})))
     .pipe(gulpif(/\.css$/, cssSlam()))
     .pipe(gulpif(/\.html$/, htmlMinifier({collapseWhitespace: true, minifyCSS: true, minifyJS: true, removeComments: true})))
