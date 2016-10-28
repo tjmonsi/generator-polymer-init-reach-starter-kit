@@ -33,6 +33,7 @@
     "css-slam": "^1.1.0",
     "gulp-babel": "^6.1.2",
     "gulp-html-minifier": "^0.1.8",
-    "gulp-uglify": "^2.0.0"
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
   }
 }
