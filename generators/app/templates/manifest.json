@@ -1,6 +1,6 @@
 {
-  "name": "Project Name",
-  "short_name": "Project Name",
+  "name": "<%= projectName %>",
+  "short_name": "<%= projectName %>",
   "start_url": "/?homescreen=1",
   "display": "standalone",
   "theme_color": "#3f51b5",
