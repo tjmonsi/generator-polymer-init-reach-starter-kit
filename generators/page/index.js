@@ -79,6 +79,15 @@ module.exports = yeoman.Base.extend({
       
       this.write(this.destinationPath('config/pages.json'), JSON.stringify(obj, null, '  '));
       
+      var polymerStr = this.read(this.destinationPath('polymer.json'));
+      var polymerObj = JSON.parse(polymerStr);
+      
+      if (polymerObj.fragments.indexOf(src + '.html') < 0) {
+        polymerObj.fragments.push(src + '.html');
+      }
+      
+      this.write(this.destinationPath('polymer.json'), JSON.stringify(polymerObj, null, '  '));
+      
       this.fs.copyTpl(
         this.templatePath('web-page-style.html'),
         this.destinationPath(src + '-style.html'),

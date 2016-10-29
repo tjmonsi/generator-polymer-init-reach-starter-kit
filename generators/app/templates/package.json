@@ -12,7 +12,10 @@
     "build": "polymer build",
     "bundled": "polymer serve build/bundled -H $IP -p $PORT",
     "unbundled": "polymer serve build/unbundled -H $IP -p $PORT",
-    "gulp": "$(npm bin)/gulp"
+    "gulp": "$(npm bin)/gulp",
+    "watch": "$(npm bin)/gulp watch-all",
+    "add-page": "yo polymer-init-reach-starter-kit:page",
+    "add-element": "yo polymer-init-reach-starter-kit:element"
   },
   "author": "",
   "license": "MIT",
