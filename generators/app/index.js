@@ -151,21 +151,6 @@ module.exports = yeoman.Base.extend({
                               'script:\n' +
                               '  - xvfb-run polymer test');
     
-    // this.fs.copy(
-    //   this.templatePath('.gitattributes'),
-    //   this.destinationPath('.gitattributes') 
-    // );
-    
-    // this.fs.copy(
-    //   this.templatePath('.gitignore'),
-    //   this.destinationPath('.gitignore') 
-    // );
-    
-    // this.fs.copy(
-    //   this.templatePath('.travis.yml'),
-    //   this.destinationPath('.travis.yml') 
-    // );
-    
     this.fs.copy(
       this.templatePath('fonts/.gitkeep'),
       this.destinationPath('fonts/.gitkeep') 

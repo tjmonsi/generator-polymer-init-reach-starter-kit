@@ -43,6 +43,16 @@ module.exports = yeoman.Base.extend({
       name: 'notIncludedInLink',
       message: 'Should this be included in the links?',
       default: true
+    },{
+      type: 'confirm',
+      name: 'auth',
+      message: 'Does the user needs to be authenticated before seeing this page?',
+      default: false
+    },{
+      type: 'input',
+      name: 'attributes',
+      message: 'What are the other attribute-value pairs that you want to include?\n(type it out as if writing in Polymer separated by space\ni.e. attribute-1="value-1" attribute-2="{{doubleBindedVar}}" attribute-3="[[singleBindedVar]]" boolean-attribute )\n',
+      default: ''
     }];
 
     return this.prompt(prompts).then(function (props) {
@@ -64,7 +74,9 @@ module.exports = yeoman.Base.extend({
         tag: this.props.tagName,
         "link-label": this.props.label,
         route: this.props.route,
-        source: '/' + src + '.html'
+        source: '/' + src + '.html',
+        auth: this.props.auth,
+        attributes: {}
       };
       
       if (!this.props.notIncludedInRouter) {
@@ -73,6 +85,18 @@ module.exports = yeoman.Base.extend({
       
       if (!this.props.notIncludedInLink) {
         el['not-included-in-links'] = !this.props.notIncludedInLink;
+      }
+      
+      var attr = this.props.attributes.trim().split(/ /g);
+      
+      for (var i in attr) {
+        var arr = attr[i].split('=');
+        if (arr.length === 1) {
+          el.attributes[arr[0]] = '';
+        } else {
+          var ax = arr.splice(0, 1);
+          el.attributes[ax] = arr.join('');  
+        }
       }
       
       obj.pages.push(el);
@@ -124,10 +148,38 @@ module.exports = yeoman.Base.extend({
         return str;
       }) + endLazy;
       
+      function elementAttribute(i) {
+        return i.attribute ? i.attribute + (i.value ? '=' + i.value + ' ' : '') : i;
+      }
+      
+      function pageTag(item) {
+        var attr = [];
+        for (var i in item.attributes) {
+          attr.push({
+            attribute: i,
+            value: item.attributes[i]
+          });
+        }
+        return item.tag ? 
+            `<${item.tag} name="${item.route}"` + 
+            `label="${item['link-label']}"` + 
+            `scroll-progress="{{scrollProgress}}"` + 
+            `user="{{user}}"` + 
+            `query-params="{{queryParams}}"` + 
+            `${item['not-included-in-links'] ? 'not-included-in-links' : ''} ` + 
+            `${item.auth ? 'auth' : ''} ` +
+            (attr.length > 0 ? attr.reduce(function(p, i) {
+              var str = elementAttribute(p);
+              str += elementAttribute(i);
+              return str;
+            }) : '') +
+            `></${item.tag}>\n` : item;
+      }
+      
       var routerString = startRouter + '\n' + obj.pages.reduce(function(prev, item) {
-        var str = prev.tag ? `<${prev.tag} name="${prev.route}" label="${prev['link-label']}" scroll-progress="{{scrollProgress}}" user="{{user}}" query-params="{{queryParams}}" ${prev['not-included-in-links'] ? 'not-included-in-links' : ''}></${prev.tag}>\n` : prev;
+        var str = pageTag(prev);
         if (!item['not-included-in-router']) {
-          str += item.tag ? `<${item.tag} name="${item.route}" label="${item['link-label']}" scroll-progress="{{scrollProgress}}" user="{{user}}" query-params="{{queryParams}}" ${item['not-included-in-links'] ? 'not-included-in-links' : ''}></${item.tag}>\n` : item;
+          str += pageTag(item);
         }
         return str;
       }) + endRouter;
