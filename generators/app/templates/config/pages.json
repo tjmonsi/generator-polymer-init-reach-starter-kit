@@ -1,5 +1,6 @@
 {
   "application-name": "<%= projectName %>",
+  "application-description": "<%= projectDescription %>"
   "default-root": "home",
   "not-found-tag": "web-404",
   "not-authorized-tag": "web-403",

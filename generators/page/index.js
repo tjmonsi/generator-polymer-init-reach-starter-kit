@@ -161,11 +161,11 @@ module.exports = yeoman.Base.extend({
           });
         }
         return item.tag ? 
-            `<${item.tag} name="${item.route}"` + 
-            `label="${item['link-label']}"` + 
-            `scroll-progress="{{scrollProgress}}"` + 
-            `user="{{user}}"` + 
-            `query-params="{{queryParams}}"` + 
+            `<${item.tag} name="${item.route}" ` + 
+            `label="${item['link-label']}" ` + 
+            `scroll-progress="{{scrollProgress}}" ` + 
+            `user="{{user}}" ` + 
+            `query-params="{{queryParams}}" ` + 
             `${item['not-included-in-links'] ? 'not-included-in-links' : ''} ` + 
             `${item.auth ? 'auth' : ''} ` +
             (attr.length > 0 ? attr.reduce(function(p, i) {
