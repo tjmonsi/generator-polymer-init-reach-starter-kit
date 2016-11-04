@@ -16,7 +16,7 @@ module.exports = yeoman.Base.extend({
       type: 'input',
       name: 'tagName',
       message: 'What would be the component name of the page?',
-      default: 'web-page',
+      default: 'page',
       
     }, 
     {
@@ -29,25 +29,27 @@ module.exports = yeoman.Base.extend({
     {
       type: 'input',
       name: 'route',
-      message: 'What would be the route of this page',
-      default: 'page'
+      message: 'What would be the route pattern of this page? (i.e. /page or /page/:id if you need to add a paramater)',
+      default: '/page'
     },
+    
     {
-      type: 'confirm',
-      name: 'notIncludedInRouter',
-      message: 'Should this be included in the router?',
-      default: true
+      type: 'input',
+      name: 'url',
+      message: 'What would be the default url to access this page?',
+      default: '/page'
     },
+
     {
       type: 'confirm',
       name: 'notIncludedInLink',
       message: 'Should this be included in the links?',
       default: true
     },{
-      type: 'confirm',
+      type: 'input',
       name: 'auth',
-      message: 'Does the user needs to be authenticated before seeing this page?',
-      default: false
+      message: 'If it needs to be authenticated, put here the variable name or function with parameters that will run to check for authentication',
+      default: '',
     },{
       type: 'input',
       name: 'attributes',
@@ -57,7 +59,8 @@ module.exports = yeoman.Base.extend({
 
     return this.prompt(prompts).then(function (props) {
       // To access props later use this.props.someAnswer;
-      props.tagName = slug(props.tagName.trim());
+      var baseTagName = slug(props.tagName.trim());
+      props.tagName = props.auth && props.auth !== '' ? 'app-' + baseTagName : 'web-' + baseTagName;
       this.props = props;
     }.bind(this));
   },
@@ -74,14 +77,11 @@ module.exports = yeoman.Base.extend({
         tag: this.props.tagName,
         "link-label": this.props.label,
         route: this.props.route,
+        url: this.props.url,
         source: '/' + src + '.html',
-        auth: this.props.auth,
+        auth: this.props.auth && this.props.auth !== '' ? "[[" + this.props.auth + "]]" : null,
         attributes: {}
       };
-      
-      if (!this.props.notIncludedInRouter) {
-        el['not-included-in-router'] = !this.props.notIncludedInRouter;
-      }
       
       if (!this.props.notIncludedInLink) {
         el['not-included-in-links'] = !this.props.notIncludedInLink;
@@ -130,17 +130,46 @@ module.exports = yeoman.Base.extend({
         this.props
       );
       
+      var shell = this.read(this.destinationPath('src/'+ slug(this.determineAppname().trim()) + '-app.html'));
+      
       var startLazy = '<!-- LAZY LOADER STARTS HERE -->';
       var endLazy = '<!-- LAZY LOADER ENDS HERE -->';
       
       var startRouter = '<!-- ROUTER STARTS HERE -->';
       var endRouter = '<!-- ROUTER ENDS HERE -->';
       
+      var startNavList = '/\\* NAVIGATION LIST STARTS HERE \\*/';
+      var endNavList = '/\\* NAVIGATION LIST ENDS HERE \\*/'
+      
       //Creates the regEx this ways so I can pass the variables. 
       var regLazy = new RegExp(startLazy+"[\\s\\S]*"+endLazy, "g");
       var regRouter = new RegExp(startRouter+"[\\s\\S]*"+endRouter, "g");
+      var regNavList = new RegExp(startNavList+"[\\s\\S]*"+endNavList, "g")
       
-      var shell = this.read(this.destinationPath('src/'+ slug(this.determineAppname().trim()) + '-app.html'));
+      var navigationList = [];
+      
+      for (var n in obj.pages) {
+        if (!obj.pages[n]['not-included-in-links']) {
+          navigationList.push({
+            label: obj.pages[n]['link-label'],
+            url: obj.pages[n].url
+          })  
+        }
+      }
+
+      function pageTag(item) {
+        var attrString = '';
+        for (var i in item.attributes) {
+          attrString += i + '=' + item.attributes[i] + ' ';
+        }
+        return item.tag ? 
+            `<${item.tag} route="${item.route}" ` + 
+            `scroll-progress="{{scrollProgress}}" ` + 
+            `user="{{user}}" ` + 
+            `${item.auth ? `auth="${item.auth}"` : ''} ` +
+            attrString +
+            `></${item.tag}>\n` : item;
+      }
       
       var lazyString = startLazy + '\n' + obj.pages.reduce(function(prev, item) {
         var str = prev.tag ? `<link rel="lazy-import" href="${prev.source}" group="${prev.tag}">\n` : prev;
@@ -148,44 +177,20 @@ module.exports = yeoman.Base.extend({
         return str;
       }) + endLazy;
       
-      function elementAttribute(i) {
-        return i.attribute ? i.attribute + (i.value ? '=' + i.value + ' ' : '') : i;
-      }
-      
-      function pageTag(item) {
-        var attr = [];
-        for (var i in item.attributes) {
-          attr.push({
-            attribute: i,
-            value: item.attributes[i]
-          });
-        }
-        return item.tag ? 
-            `<${item.tag} name="${item.route}" ` + 
-            `label="${item['link-label']}" ` + 
-            `scroll-progress="{{scrollProgress}}" ` + 
-            `user="{{user}}" ` + 
-            `query-params="{{queryParams}}" ` + 
-            `${item['not-included-in-links'] ? 'not-included-in-links' : ''} ` + 
-            `${item.auth ? 'auth' : ''} ` +
-            (attr.length > 0 ? attr.reduce(function(p, i) {
-              var str = elementAttribute(p);
-              str += elementAttribute(i);
-              return str;
-            }) : '') +
-            `></${item.tag}>\n` : item;
-      }
-      
       var routerString = startRouter + '\n' + obj.pages.reduce(function(prev, item) {
         var str = pageTag(prev);
-        if (!item['not-included-in-router']) {
-          str += pageTag(item);
-        }
+        str += pageTag(item);
         return str;
       }) + endRouter;
       
+      var navigationListString = '/* NAVIGATION LIST STARTS HERE */' + 
+                                  '\nreturn' + JSON.stringify(navigationList, null, '  ') + 
+                                  ';\n' + 
+                                  '/* NAVIGATION LIST ENDS HERE */';
+      
       shell = shell.replace(regLazy, lazyString);
       shell = shell.replace(regRouter, routerString);
+      shell = shell.replace(regNavList, navigationListString);
       
       this.write(this.destinationPath('src/'+ slug(this.determineAppname().trim()) + '-app.html'), shell);
     } 

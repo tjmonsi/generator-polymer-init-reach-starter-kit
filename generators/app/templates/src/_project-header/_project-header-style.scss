@@ -6,10 +6,6 @@
 }
 
 app-header {
-  @apply(--layout-fixed-top);
-}
-
-app-header {
   color: #fff;
   background-color: var(--app-primary-color);
 }

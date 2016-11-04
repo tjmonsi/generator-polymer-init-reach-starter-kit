@@ -20,43 +20,44 @@ var injectPage = function () {
         try {
           var obj = JSON.parse(data);
           
+          var shell = fs.readFileSync(name, 'utf-8');
+          
           var startLazy = '<!-- LAZY LOADER STARTS HERE -->';
           var endLazy = '<!-- LAZY LOADER ENDS HERE -->';
           
           var startRouter = '<!-- ROUTER STARTS HERE -->';
           var endRouter = '<!-- ROUTER ENDS HERE -->';
           
+          var startNavList = '/\\* NAVIGATION LIST STARTS HERE \\*/';
+          var endNavList = '/\\* NAVIGATION LIST ENDS HERE \\*/'
+          
           //Creates the regEx this ways so I can pass the variables. 
           var regLazy = new RegExp(startLazy+"[\\s\\S]*"+endLazy, "g");
           var regRouter = new RegExp(startRouter+"[\\s\\S]*"+endRouter, "g");
+          var regNavList = new RegExp(startNavList+"[\\s\\S]*"+endNavList, "g")
           
-          var shell = fs.readFileSync(name, 'utf-8');
+          var navigationList = [];
           
-          function elementAttribute(i) {
-            return i.attribute ? i.attribute + (i.value ? '=' + i.value + ' ' : '') : i;
+          for (var n in obj.pages) {
+            if (!obj.pages[n]['not-included-in-links']) {
+              navigationList.push({
+                label: obj.pages[n]['link-label'],
+                url: obj.pages[n].url
+              })  
+            }
           }
-          
+    
           function pageTag(item) {
-            var attr = [];
+            var attrString = '';
             for (var i in item.attributes) {
-              attr.push({
-                attribute: i,
-                value: item.attributes[i]
-              });
+              attrString += i + '=' + item.attributes[i] + ' ';
             }
             return item.tag ? 
-                `<${item.tag} name="${item.route}"` + 
-                `label="${item['link-label']}"` + 
-                `scroll-progress="{{scrollProgress}}"` + 
-                `user="{{user}}"` + 
-                `query-params="{{queryParams}}"` + 
-                `${item['not-included-in-links'] ? 'not-included-in-links' : ''} ` + 
-                `${item.auth ? 'auth' : ''} ` +
-                (attr.length > 0 ? attr.reduce(function(p, i) {
-                  var str = elementAttribute(p);
-                  str += elementAttribute(i);
-                  return str;
-                }) : '') +
+                `<${item.tag} route="${item.route}" ` + 
+                `scroll-progress="{{scrollProgress}}" ` + 
+                `user="{{user}}" ` + 
+                `${item.auth ? `auth="${item.auth}"` : ''} ` +
+                attrString +
                 `></${item.tag}>\n` : item;
           }
           
@@ -68,14 +69,18 @@ var injectPage = function () {
           
           var routerString = startRouter + '\n' + obj.pages.reduce(function(prev, item) {
             var str = pageTag(prev);
-            if (!item['not-included-in-router']) {
-              str += pageTag(item);
-            }
+            str += pageTag(item);
             return str;
           }) + endRouter;
           
+          var navigationListString = '/* NAVIGATION LIST STARTS HERE */' + 
+                                      '\nreturn' + JSON.stringify(navigationList, null, '  ') + 
+                                      ';\n' + 
+                                      '/* NAVIGATION LIST ENDS HERE */';
+          
           shell = shell.replace(regLazy, lazyString);
           shell = shell.replace(regRouter, routerString);
+          shell = shell.replace(regNavList, navigationListString);
           
           fs.writeFile(name, shell, 'utf8', function(err) {
             if (err) {

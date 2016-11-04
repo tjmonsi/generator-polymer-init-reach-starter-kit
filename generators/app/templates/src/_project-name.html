@@ -1,6 +1,6 @@
 <!-- Polymer Global dependencies -->
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/reach-core/reach-core-route/reach-core-route.html">
+<link rel="import" href="../bower_components/reach-core/reach-core-router/reach-core-router.html">
 <link rel="import" href="../bower_components/reach-core/reach-core-layout/reach-core-layout.html">
 
 <!-- Custom Element dependencies -->
@@ -45,26 +45,24 @@ Wham! It's all awesome now!
         scroll-progress="{{scrollProgress}}" 
         user="{{user}}"></<%= projectNameSlugged %>-drawer>
 
-      <reach-core-route
+      <reach-core-router
           main-content
-          from-element-name="<%= projectNameSlugged %>-app"
-          subroute="{{subroute}}"
-          not-found-tag="[[notFoundTag]]"
-          not-authorized-tag="[[notAuthorizedTag]]"
-          navigation-list="{{navigationList}}"
-          default-page="[[defaultRoot]]"
+          parent-tag-name="<%= projectNameSlugged %>-app"
           query-params="{{queryParams}}">
 
         <!-- ROUTER STARTS HERE -->
-        <web-home 
-          name="home" 
-          label="Home" 
-          scroll-progress="{{scrollProgress}}" 
-          user="{{user}}"
-          query-params="{{queryParams}}"></web-home>
+        <web-home route="/" scroll-progress="{{scrollProgress}}" user="{{user}}"  ></web-home>
+        <web-404 route="not-found" scroll-progress="{{scrollProgress}}" user="{{user}}"  ></web-404>
+        <web-403 route="not-authorized" scroll-progress="{{scrollProgress}}" user="{{user}}"  ></web-403>
         <!-- ROUTER ENDS HERE -->
+        <!--<web-home -->
+        <!--  name="home" -->
+        <!--  label="Home" -->
+        <!--  scroll-progress="{{scrollProgress}}" -->
+        <!--  user="{{user}}"-->
+        <!--  query-params="{{queryParams}}"></web-home>-->
 
-      </reach-core-route>
+      </reach-core-router>
     </reach-core-layout>
 
   </template>
@@ -75,26 +73,19 @@ Wham! It's all awesome now!
       is: '<%= projectNameSlugged %>-app',
 
       properties: {
-        notFoundTag: {
-          type: String,
-          /* NOT FOUND TAG STARTS */
-          value: 'web-404'
-          /* NOT FOUND TAG ENDS */
-        },
-        notAuthorizedTag: {
-          type: String,
-          /* NOT AUTHORIZED TAG STARTS */
-          value: 'web-403'
-          /* NOT AUTHORIZED TAG ENDS */
-        },
-        defaultRoot: {
-          type: String,
-          /* DEFAULT ROOT STARTS */
-          value: 'home'
-          /* DEFAULT ROOT ENDS */
-        },
         navigationList: {
-          type: Array
+          type: Array,
+          readOnly: true,
+          value: function() {
+            /* NAVIGATION LIST STARTS HERE */
+            return [
+              {
+                label: 'Home',
+                url: '/'
+              }
+            ];
+            /* NAVIGATION LIST ENDS HERE */
+          }
         },
         scrollProgress: {
           type: Number

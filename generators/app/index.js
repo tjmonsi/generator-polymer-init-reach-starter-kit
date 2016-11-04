@@ -25,7 +25,7 @@ module.exports = yeoman.Base.extend({
 
     return this.prompt(prompts).then(function (props) {
       // To access props later use this.props.someAnswer;
-      props.projectNameSlugged = slug(props.projectName.trim().toLowerCase());
+      props.projectNameSlugged = 'reach-core' // slug(props.projectName.trim().toLowerCase());
       this.props = props;
     }.bind(this));
   },
